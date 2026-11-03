@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wishlist de Noël – Lucrene Beauty & Spa</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#7a1226;--red2:#9b1b30;--green:#1f4d3a;--cream:#fbf5ea;--gold:#c9a24b;--ink:#2a1a1a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Poppins,system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--red) 0,var(--red) 260px,var(--green) 100%);min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:22px 16px 40px}
+header{text-align:center;color:var(--cream);padding:8px 8px 18px}
+.brand{letter-spacing:.35em;font-size:11px;color:var(--gold);text-transform:uppercase}
+h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:36px;line-height:1.1;margin:10px 0 4px}
+h1 em{display:block;color:var(--gold);font-weight:500}
+.sub{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:17px;opacity:.9}
+.tabs{display:flex;background:rgba(255,255,255,.15);border-radius:999px;padding:4px;margin:14px 0}
+.tabs button{flex:1;border:0;background:transparent;color:var(--cream);font:500 13px Poppins,sans-serif;padding:10px 6px;border-radius:999px;cursor:pointer}
+.tabs button.on{background:var(--cream);color:var(--red)}
+.name{width:100%;border:0;border-radius:14px;padding:13px 14px;font:400 14px Poppins,sans-serif;background:var(--cream);margin-bottom:12px}
+.item{display:flex;align-items:center;gap:12px;background:var(--cream);border-radius:18px;padding:14px;margin-bottom:10px;cursor:pointer;border:2px solid transparent;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.item.on{border-color:var(--gold)}
+.ico{font-size:26px;width:46px;height:46px;border-radius:50%;background:#f1e3d6;display:grid;place-items:center;flex:none}
+.txt{flex:1}
+.t{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:19px;line-height:1.1}
+.d{font-size:12px;opacity:.7;margin-top:2px}
+.p{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:17px;white-space:nowrap}
+.box{width:26px;height:26px;border-radius:8px;border:2px solid var(--gold);display:grid;place-items:center;color:#fff;flex:none}
+.item.on .box{background:var(--red);border-color:var(--red)}
+.item.on .box::after{content:"✓";font-size:15px}
+.total{color:var(--cream);text-align:center;margin:14px 0 10px;font-size:14px;min-height:20px}
+.cta{width:100%;border:0;border-radius:999px;padding:16px;font:600 14px Poppins,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;color:var(--cream);background:var(--red2);box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.cta.wa{background:#1f8f4e;margin-bottom:10px}
+.cta[disabled]{opacity:.45}
+.foot{text-align:center;color:var(--cream);font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:16px;margin-top:18px}
+.foot small{display:block;font:400 12px Poppins,sans-serif;font-style:normal;opacity:.8;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="brand">Lucrene Beauty &amp; Spa</div>
+<h1>Ma wishlist beauté<em>de Noël</em></h1>
+<div class="sub" id="sub">Coche tes envies et fais-les savoir à ceux qui te gâtent</div>
+</header>
+
+<div class="tabs">
+<button id="tMe" class="on">🎁 Pour moi</button>
+<button id="tGift">💝 À offrir</button>
+</div>
+
+<input class="name" id="nm" placeholder="Ton prénom">
+<div id="list"></div>
+<div class="total" id="tot"></div>
+<button class="cta wa" id="wa" disabled>Envoyer par WhatsApp</button>
+<button class="cta" id="sh" disabled>Partager autrement</button>
+
+<div class="foot">Un moment rien qu’à soi, à offrir ♡
+<small>Réservation : 672 572 615 · 691 643 305 · lucrenebeautyspa@gmail.com</small></div>
+</div>
+
+<script>
+// ✏️ MODIFIE ICI tes prestations et tes prix (laisse price: "" pour ne pas afficher de prix)
+var SERVICES=[
+{icon:"✨",t:"Soin visage éclat",d:"Une peau qui respire",price:""},
+{icon:"💆",t:"Soin du corps",d:"Un vrai moment de détente",price:""},
+{icon:"🌸",t:"Épilation",d:"Douceur et précision",price:""},
+{icon:"❄️",t:"Cryolipolyse",d:"Redessine ta silhouette",price:""}
+];
+var PHONE="237672572615"; // numéro du spa (pour ta propre référence)
+var mode="me", sel={};
+
+var list=document.getElementById("list");
+function render(){
+  list.innerHTML="";
+  SERVICES.forEach(function(s,i){
+    var el=document.createElement("div");
+    el.className="item"+(sel[i]?" on":"");
+    el.innerHTML='<div class="ico">'+s.icon+'</div><div class="txt"><div class="t">'+s.t+'</div><div class="d">'+s.d+'</div></div>'+(s.price?'<div class="p">'+s.price+'</div>':'')+'<div class="box"></div>';
+    el.onclick=function(){sel[i]=!sel[i];render();};
+    list.appendChild(el);
+  });
+  var n=Object.keys(sel).filter(function(k){return sel[k]}).length;
+  document.getElementById("tot").textContent=n?(n+" prestation"+(n>1?"s":"")+" choisie"+(n>1?"s":"")):"";
+  document.getElementById("wa").disabled=!n;
+  document.getElementById("sh").disabled=!n;
+}
+function setMode(m){
+  mode=m;
+  document.getElementById("tMe").className=m==="me"?"on":"";
+  document.getElementById("tGift").className=m==="gift"?"on":"";
+  document.getElementById("sub").textContent=m==="me"?"Coche tes envies et fais-les savoir à ceux qui te gâtent":"Choisis les soins que tu souhaites offrir à quelqu’un que tu aimes";
+  document.getElementById("nm").placeholder=m==="me"?"Ton prénom":"Prénom de la personne à gâter";
+}
+document.getElementById("tMe").onclick=function(){setMode("me")};
+document.getElementById("tGift").onclick=function(){setMode("gift")};
+
+function msg(){
+  var nm=document.getElementById("nm").value.trim();
+  var items=SERVICES.filter(function(s,i){return sel[i]}).map(function(s){return "✔ "+s.t+(s.price?" – "+s.price:"")});
+  var head=mode==="me"
+    ? "🎄 Ma wishlist beauté de Noël chez Lucrene Beauty & Spa"+(nm?" ("+nm+")":"")+" :\n\n"
+    : "🎄 Cadeau de Noël pour "+(nm||"toi")+" chez Lucrene Beauty & Spa :\n\n";
+  var tail=mode==="me"
+    ? "\n\nUn cadeau qui me ferait vraiment plaisir ♡\nRéservation : 672 572 615 / 691 643 305"
+    : "\n\nUn moment rien qu’à toi ♡\nRéservation : 672 572 615 / 691 643 305";
+  return head+items.join("\n")+tail;
+}
+document.getElementById("wa").onclick=function(){
+  window.open("https://wa.me/?text="+encodeURIComponent(msg()),"_blank");
+};
+document.getElementById("sh").onclick=function(){
+  var m=msg();
+  if(navigator.share){navigator.share({text:m}).catch(function(){});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(m).then(function(){alert("Liste copiée, colle-la dans ton message !")}).catch(function(){prompt("Copie ta liste :",m)});}
+  else{prompt("Copie ta liste :",m);}
+};
+render();
+</script>
+</body>
+</html>
